@@ -38,13 +38,7 @@ class SJSegmentView: UIScrollView {
         }
     }
     
-    var selectedTitleColor: UIColor? {
-        didSet {
-            for segment in segments {
-                segment.selectedTitleColor(selectedTitleColor)
-            }
-        }
-    }
+    var titledColor: UIColor = .red
     
     var segmentBackgroundColor: UIColor? {
         didSet {
@@ -130,7 +124,7 @@ class SJSegmentView: UIScrollView {
 		if index! < segments.count {
 			let button = segments[index!]
 			button.isSelected = true
-		}
+        }
     }
 
     func setSegmentsView(_ frame: CGRect) {
@@ -150,6 +144,7 @@ class SJSegmentView: UIScrollView {
         //Set first button as selected
         let button = segments.first!
         button.isSelected = true
+        segments[0].titleColor(titledColor)
     }
     
     func createSegmentContentView(_ titleWidth: CGFloat) {
@@ -276,7 +271,6 @@ class SJSegmentView: UIScrollView {
 
 			segmentTab?.backgroundColor = segmentBackgroundColor
 			segmentTab?.titleColor(titleColor!)
-            segmentTab?.selectedTitleColor(selectedTitleColor!)
 			segmentTab?.titleFont(font!)
 		}
 
@@ -356,13 +350,7 @@ class SJSegmentView: UIScrollView {
         let value = (contentView?.contentOffset.x)! / changeOffset
         
         if !value.isNaN {
-            if UIView.userInterfaceLayoutDirection(for: self.semanticContentAttribute) == .rightToLeft {
-                let newIndex = contentView?.pageIndex ?? 0
-                xPosConstraints!.constant = CGFloat(newIndex) * segmentWidth
-            } else {
-                xPosConstraints!.constant = (selectedSegmentView?.frame.origin.x)!
-            }
-            
+            xPosConstraints!.constant = (selectedSegmentView?.frame.origin.x)!
             layoutIfNeeded()
         }
     }

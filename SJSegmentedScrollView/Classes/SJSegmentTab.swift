@@ -38,7 +38,7 @@ open class SJSegmentTab: UIView {
 
 	convenience init(title: String) {
 		self.init(frame: CGRect.zero)
-        setTitle(title)
+		button.setTitle(title, for: .normal)
 	}
 
 	convenience init(view: UIView) {
@@ -78,31 +78,25 @@ open class SJSegmentTab: UIView {
 	required public init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
-    
-    open func setTitle(_ title: String) {
-        
-        button.setTitle(title, for: .normal)
-    }
 
 	open func titleColor(_ color: UIColor) {
 
 		button.setTitleColor(color, for: .normal)
 	}
-    
-    open func selectedTitleColor(_ color: UIColor?) {
-        
-        button.setTitleColor(color, for: .selected)
-    }
 
 	open func titleFont(_ font: UIFont) {
 
 		button.titleLabel?.font = font
 	}
 
-	@objc func onSegmentButtonPress(_ sender: AnyObject) {
+    @objc func onSegmentButtonPress(_ sender: AnyObject) {
+
 		let index = tag - kSegmentViewTagOffset
 		NotificationCenter.default.post(name: Notification.Name(rawValue: "DidChangeSegmentIndex"),
 		                                object: index)
-        didSelectSegmentAtIndex?(self, index, true)
+
+		if didSelectSegmentAtIndex != nil {
+			didSelectSegmentAtIndex!(self, index, true)
+		}
 	}
 }

@@ -31,7 +31,7 @@ class SJContentView: UIScrollView {
     var contentSubViewWidthConstraints = [NSLayoutConstraint]()
     let animationDuration = 0.3
     var didSelectSegmentAtIndex: DidSelectSegmentAtIndex?
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -118,13 +118,7 @@ class SJContentView: UIScrollView {
         
         layoutIfNeeded()
         var point = contentOffset
-        if UIView.userInterfaceLayoutDirection(for: self.semanticContentAttribute) == .rightToLeft {
-            let newIndex = (contentViews.count - pageIndex) - 1
-            point.x = CGFloat(newIndex) * width
-        } else {
-            point.x = CGFloat(pageIndex) * width
-        }
-        
+        point.x = CGFloat(pageIndex) * width
         setContentOffset(point, animated: true)
     }
     
@@ -135,14 +129,8 @@ class SJContentView: UIScrollView {
     func movePageToIndex(_ index: Int, animated: Bool) {
         
         pageIndex = index
-        var point = CGPoint.zero
-        if UIView.userInterfaceLayoutDirection(for: self.semanticContentAttribute) == .rightToLeft {
-            let newIndex = (contentViews.count - index) - 1
-            point = CGPoint(x: (newIndex * Int(bounds.size.width)), y: 0)
-        } else {
-            point = CGPoint(x: (index * Int(bounds.size.width)), y: 0)
-        }
-    
+        let point = CGPoint(x: (index * Int(bounds.size.width)), y: 0)
+        
         if animated == true {
             UIView.animate(withDuration: animationDuration) {
                 self.contentOffset = point
@@ -157,11 +145,8 @@ extension SJContentView: UIScrollViewDelegate {
     
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         pageIndex = Int(contentOffset.x / bounds.size.width)
-        if UIView.userInterfaceLayoutDirection(for: self.semanticContentAttribute) == .rightToLeft {
-            pageIndex = (contentViews.count - 1) - pageIndex
-        }
         didSelectSegmentAtIndex?(nil, pageIndex, true)
         NotificationCenter.default.post(name: Notification.Name(rawValue: "DidChangeSegmentIndex"),
-                                        object: pageIndex)
+                                                                  object: pageIndex)
     }
 }
